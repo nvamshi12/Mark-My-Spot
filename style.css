@@ -209,23 +209,17 @@ h2 {
 /* For Mobile screens */
 @media (max-width: 999px) {
   .map--div {
-    font-size: 1rem;
+    font-size: 16.1px;
   }
   .place-visited,
   .place-type,
   .submit,
   .reset {
     width: calc(100% - 2rem);
-    font-size: 14.5px;
+    font-size: 16.1px;
   }
   .place-visited,
   .place-type{
-  height:1.5rem;
-  }
-  h2 {
-    font-size: 1.1rem;
-  }
-  h3 {
-    font-size: 0.9rem;
+  height:2rem;
   }
 }
