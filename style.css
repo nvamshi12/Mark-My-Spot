@@ -222,6 +222,9 @@ h2 {
   .place-type,.date{
   height:2.2rem;
   }
+  .date{
+  width: calc(80% - 1rem);
+  }
   .place-type{
     margin-top: 0;
   }
