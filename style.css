@@ -68,7 +68,7 @@ h1 {
 .submit,
 .reset {
   font-size: 0.85rem;
-  height: fit-content;
+  height: auto;
   width: 40%;
   padding: 0.53rem;
   padding-left: 0.5rem;
