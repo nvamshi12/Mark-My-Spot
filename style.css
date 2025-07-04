@@ -67,7 +67,7 @@ h1 {
 .place-type,
 .submit,
 .reset {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   height: fit-content;
   width: 40%;
   padding: 0.53rem;
@@ -85,7 +85,7 @@ h1 {
   padding-right: 0.53rem;
   border-radius: 0.5rem;
   margin: 1rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   margin-top: 0.2rem;
 }
 .submit,

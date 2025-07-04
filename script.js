@@ -40,55 +40,88 @@ let initialMarker;
 let placesArr = [];
 let markersGroup;
 let markerExists;
-navigator.geolocation.getCurrentPosition(function (position) {
-  latitude = position.coords.latitude;
-  longitude = position.coords.longitude;
-  console.log(position);
-  map = L.map("map").setView([latitude, longitude], 13);
+navigator.geolocation.getCurrentPosition(
+  function (position) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    console.log(position);
+    map = L.map("map").setView([latitude, longitude], 13);
 
-  L.tileLayer("https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
-    maxZoom: 21,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-  }).addTo(map);
+    L.tileLayer("https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+      maxZoom: 21,
+      subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    }).addTo(map);
 
-  // create a marker group
-  markersGroup = L.layerGroup().addTo(map);
-  // THE SEARCH BAR ON TOP-RIGHT
-  const geocoderControl = L.Control.geocoder({
-    collapsed: false,
-    defaultMarkGeocode: false,
-    placeholder: "Search for a place",
-    errorMessage: "Nothing found.",
-  })
-    .on("markgeocode", function (e) {
-      const center = e.geocode.center;
-      // you can also add a marker
-      L.marker(center).addTo(map).bindPopup(e.geocode.name).openPopup();
-      map.setView(center, 13);
+    // create a marker group
+    markersGroup = L.layerGroup().addTo(map);
+    // THE SEARCH BAR ON TOP-RIGHT
+    const geocoderControl = L.Control.geocoder({
+      collapsed: false,
+      defaultMarkGeocode: false,
+      placeholder: "Search for a place",
+      errorMessage: "Nothing found.",
     })
-    .addTo(map);
+      .on("markgeocode", function (e) {
+        const center = e.geocode.center;
+        // you can also add a marker
+        L.marker(center).addTo(map).bindPopup(e.geocode.name).openPopup();
+        map.setView(center, 13);
+      })
+      .addTo(map);
 
-  // LOAD THE STORED DATA IN LOCAL STORAGE
-  const storedDataArr = JSON.parse(
-    this.window.localStorage.getItem("placesArrToStore")
-  );
+    // LOAD THE STORED DATA IN LOCAL STORAGE
+    const storedDataArr = JSON.parse(
+      this.window.localStorage.getItem("placesArrToStore")
+    );
 
-  if (storedDataArr) {
-    // loop through the stored array
-    storedDataArr.forEach((item) => {
-      console.log(item.htmlPlaces);
-      userInputDiv.insertAdjacentHTML("afterend", item.htmlPlaces); // display the html
-      let placeTypeValue = document.querySelector(".place-type-value");
-      if (placeTypeValue)
-        placeTypeValue =
-          document.querySelector(".place-type-value").textContent;
-      let visitTypeValue = document.querySelector(".visit-value");
-      if (visitTypeValue)
-        visitTypeValue = document.querySelector(".visit-value").textContent;
-      console.log(visitTypeValue);
-      console.log(document.querySelector(".place-type-value"));
-      console.log(placeTypeValue);
-      marker = L.marker(item.coords)
+    if (storedDataArr) {
+      // loop through the stored array
+      storedDataArr.forEach((item) => {
+        console.log(item.htmlPlaces);
+        userInputDiv.insertAdjacentHTML("afterend", item.htmlPlaces); // display the html
+        let placeTypeValue = document.querySelector(".place-type-value");
+        if (placeTypeValue)
+          placeTypeValue =
+            document.querySelector(".place-type-value").textContent;
+        let visitTypeValue = document.querySelector(".visit-value");
+        if (visitTypeValue)
+          visitTypeValue = document.querySelector(".visit-value").textContent;
+        console.log(visitTypeValue);
+        console.log(document.querySelector(".place-type-value"));
+        console.log(placeTypeValue);
+        marker = L.marker(item.coords)
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 400,
+              minwidth: 200,
+              autoClose: false,
+              closeOnClick: false,
+            })
+          )
+          .setPopupContent(
+            `${placeTypeValue ? placeTypeValue : ""} ${
+              visitTypeValue ? "<br>" + visitTypeValue : ""
+            }`
+          )
+          .openPopup();
+        markersGroup.addLayer(marker);
+        placesArr.push(item); // add the loaded ones to the current array to work on.
+        console.log(placesArr);
+      });
+    }
+    // WHEN MAP IS CLICKED
+    map.on("click", function (pos) {
+      userInputDiv.classList.remove("hidden");
+      console.log(pos);
+      console.log("map is clicked!");
+      lat = pos.latlng.lat;
+      lng = pos.latlng.lng;
+      // check if marker already exists
+      markerExists = checkIfMarkerAlreadyExists(pos.latlng);
+
+      if (initialMarker) initialMarker.remove();
+      initialMarker = L.marker([lat, lng])
         .addTo(map)
         .bindPopup(
           L.popup({
@@ -99,86 +132,22 @@ navigator.geolocation.getCurrentPosition(function (position) {
           })
         )
         .setPopupContent(
-          `${placeTypeValue ? placeTypeValue : ""} ${
-            visitTypeValue ? "<br>" + visitTypeValue : ""
-          }`
+          `Add additional info about this place on the left pane.`
         )
         .openPopup();
-      markersGroup.addLayer(marker);
-      placesArr.push(item); // add the loaded ones to the current array to work on.
-      console.log(placesArr);
     });
-  }
-  // WHEN MAP IS CLICKED
-  map.on("click", function (pos) {
-    userInputDiv.classList.remove("hidden");
-    console.log(pos);
-    console.log("map is clicked!");
-    lat = pos.latlng.lat;
-    lng = pos.latlng.lng;
-    // check if marker already exists
-    markerExists = checkIfMarkerAlreadyExists(pos.latlng);
-
-    if (initialMarker) initialMarker.remove();
-    initialMarker = L.marker([lat, lng])
-      .addTo(map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 400,
-          minwidth: 200,
-          autoClose: false,
-          closeOnClick: false,
-        })
-      )
-      .setPopupContent(`Add additional info about this place on the left pane.`)
-      .openPopup();
-  });
-  submitBtn.addEventListener("click", function (e) {
-    initialMarker.remove();
-    markerExists = checkIfMarkerAlreadyExists({ lat, lng });
-    if (markerExists) return;
-    inputDateVisited = document.querySelector(".date");
-    const placeType = inputPlaceType.value;
-    const visitation = inputVisitationType.value;
-    // when no input is provided about the visitation -> visitation is not selected.
-    if (!visitation) {
-      if (!placeType) {
-        return;
-      }
-      marker = L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup(
-          L.popup({
-            maxWidth: 400,
-            minwidth: 200,
-            autoClose: false,
-            closeOnClick: false,
-          })
-        )
-        .setPopupContent(`${placeType}`)
-        .openPopup();
-      markersGroup.addLayer(marker);
-
-      html = `<div class="list--div" data-id="${Date.now()}">
-                      <h2 class="place-type-value">
-                      ${placeType}
-                      </h2>
-                  </div>`;
-      userInputDiv.insertAdjacentHTML("afterend", html);
-      placesListDiv = document.querySelector(".list--div");
-      placesArr.push({
-        coords: [lat, lng],
-        uid: placesListDiv.dataset.id,
-        htmlPlaces: html,
-      });
-
-      return;
-    }
-    // when the place is visited
-    if (visitation === "✅ Visited") {
-      const date = inputDateVisited.value;
-      // when there is no date, no place type, just the visitation -> visited
-      if (!date && !placeType) {
+    submitBtn.addEventListener("click", function (e) {
+      initialMarker.remove();
+      markerExists = checkIfMarkerAlreadyExists({ lat, lng });
+      if (markerExists) return;
+      inputDateVisited = document.querySelector(".date");
+      const placeType = inputPlaceType.value;
+      const visitation = inputVisitationType.value;
+      // when no input is provided about the visitation -> visitation is not selected.
+      if (!visitation) {
+        if (!placeType) {
+          return;
+        }
         marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
@@ -189,14 +158,15 @@ navigator.geolocation.getCurrentPosition(function (position) {
               closeOnClick: false,
             })
           )
-          .setPopupContent(`${visitation}`)
+          .setPopupContent(`${placeType}`)
           .openPopup();
         markersGroup.addLayer(marker);
 
-        // initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
-                    <h3 class="visit-value">${visitation} </h3>
-                </div>`;
+                      <h2 class="place-type-value">
+                      ${placeType}
+                      </h2>
+                  </div>`;
         userInputDiv.insertAdjacentHTML("afterend", html);
         placesListDiv = document.querySelector(".list--div");
         placesArr.push({
@@ -207,8 +177,77 @@ navigator.geolocation.getCurrentPosition(function (position) {
 
         return;
       }
-      //  when the place is visited but date is not entered. visitation -> visited
-      if (!date) {
+      // when the place is visited
+      if (visitation === "✅ Visited") {
+        const date = inputDateVisited.value;
+        // when there is no date, no place type, just the visitation -> visited
+        if (!date && !placeType) {
+          marker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(
+              L.popup({
+                maxWidth: 400,
+                minwidth: 200,
+                autoClose: false,
+                closeOnClick: false,
+              })
+            )
+            .setPopupContent(`${visitation}`)
+            .openPopup();
+          markersGroup.addLayer(marker);
+
+          // initialMarker.remove();
+          html = `<div class="list--div" data-id="${Date.now()}">
+                    <h3 class="visit-value">${visitation} </h3>
+                </div>`;
+          userInputDiv.insertAdjacentHTML("afterend", html);
+          placesListDiv = document.querySelector(".list--div");
+          placesArr.push({
+            coords: [lat, lng],
+            uid: placesListDiv.dataset.id,
+            htmlPlaces: html,
+          });
+
+          return;
+        }
+        //  when the place is visited but date is not entered. visitation -> visited
+        if (!date) {
+          marker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(
+              L.popup({
+                maxWidth: 400,
+                minwidth: 200,
+                autoClose: false,
+                closeOnClick: false,
+              })
+            )
+            .setPopupContent(
+              `${!placeType ? "" : placeType + "<br>"}  ${visitation}`
+            )
+            .openPopup();
+          markersGroup.addLayer(marker);
+
+          // initialMarker.remove();
+          html = `<div class="list--div" data-id="${Date.now()}">
+              <h2 class="place-type-value">${placeType}
+              </h2>
+              <h3 class="visit-value">${visitation} </h3>
+          </div>`;
+          userInputDiv.insertAdjacentHTML("afterend", html);
+          placesListDiv = document.querySelector(".list--div");
+          placesArr.push({
+            coords: [lat, lng],
+            uid: placesListDiv.dataset.id,
+            htmlPlaces: html,
+          });
+
+          return;
+        }
+
+        //  when the place is visited and date is entered.
+        const prettyDate = monthsBreakdown(date); // get a neat readable date from the function.
+        console.log(prettyDate, placeType, visitation);
         marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
@@ -220,17 +259,18 @@ navigator.geolocation.getCurrentPosition(function (position) {
             })
           )
           .setPopupContent(
-            `${!placeType ? "" : placeType + "<br>"}  ${visitation}`
+            `${placeType} <br> ${visitation} on 🗓️ ${prettyDate}`
           )
           .openPopup();
         markersGroup.addLayer(marker);
 
         // initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
-              <h2 class="place-type-value">${placeType}
+              <h2 class="place-type-value">
+              ${placeType}
               </h2>
-              <h3 class="visit-value">${visitation} </h3>
-          </div>`;
+              <h3 class="h3-when-visited visit-value">${visitation} on ${prettyDate}</h3>
+              </div>`;
         userInputDiv.insertAdjacentHTML("afterend", html);
         placesListDiv = document.querySelector(".list--div");
         placesArr.push({
@@ -238,46 +278,40 @@ navigator.geolocation.getCurrentPosition(function (position) {
           uid: placesListDiv.dataset.id,
           htmlPlaces: html,
         });
-
         return;
       }
+      if (visitation === "🤩 I want to visit") {
+        if (!placeType) {
+          // when the place hasn't been visited -> visitation: want to visit.
+          marker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(
+              L.popup({
+                maxWidth: 400,
+                minwidth: 200,
+                autoClose: false,
+                closeOnClick: false,
+              })
+            )
+            .setPopupContent(`${visitation}`)
+            .openPopup();
+          markersGroup.addLayer(marker);
 
-      //  when the place is visited and date is entered.
-      const prettyDate = monthsBreakdown(date); // get a neat readable date from the function.
-      console.log(prettyDate, placeType, visitation);
-      marker = L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup(
-          L.popup({
-            maxWidth: 400,
-            minwidth: 200,
-            autoClose: false,
-            closeOnClick: false,
-          })
-        )
-        .setPopupContent(`${placeType} <br> ${visitation} on 🗓️ ${prettyDate}`)
-        .openPopup();
-      markersGroup.addLayer(marker);
+          // initialMarker.remove();
+          html = ` <div class="list--div" data-id="${Date.now()}">
+                 <h3 class="visit-value">${visitation} </h3>
+                 </div>`;
+          userInputDiv.insertAdjacentHTML("afterend", html);
+          placesListDiv = document.querySelector(".list--div");
+          placesArr.push({
+            coords: [lat, lng],
+            uid: placesListDiv.dataset.id,
+            htmlPlaces: html,
+          });
 
-      // initialMarker.remove();
-      html = `<div class="list--div" data-id="${Date.now()}">
-              <h2 class="place-type-value">
-              ${placeType}
-              </h2>
-              <h3 class="h3-when-visited visit-value">${visitation} on ${prettyDate}</h3>
-              </div>`;
-      userInputDiv.insertAdjacentHTML("afterend", html);
-      placesListDiv = document.querySelector(".list--div");
-      placesArr.push({
-        coords: [lat, lng],
-        uid: placesListDiv.dataset.id,
-        htmlPlaces: html,
-      });
-      return;
-    }
-    if (visitation === "🤩 I want to visit") {
-      if (!placeType) {
-        // when the place hasn't been visited -> visitation: want to visit.
+          return;
+        }
+        console.log(placeType, visitation);
         marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
@@ -288,14 +322,17 @@ navigator.geolocation.getCurrentPosition(function (position) {
               closeOnClick: false,
             })
           )
-          .setPopupContent(`${visitation}`)
+          .setPopupContent(`${placeType}<br> ${visitation}`)
           .openPopup();
         markersGroup.addLayer(marker);
 
         // initialMarker.remove();
-        html = ` <div class="list--div" data-id="${Date.now()}">
-                 <h3 class="visit-value">${visitation} </h3>
-                 </div>`;
+        html = `<div class="list--div" data-id="${Date.now()}">
+              <h2 class="place-type-value">
+              ${placeType}
+              </h2>
+              <h3 class="visit-value">${visitation} </h3>
+              </div>`;
         userInputDiv.insertAdjacentHTML("afterend", html);
         placesListDiv = document.querySelector(".list--div");
         placesArr.push({
@@ -306,40 +343,16 @@ navigator.geolocation.getCurrentPosition(function (position) {
 
         return;
       }
-      console.log(placeType, visitation);
-      marker = L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup(
-          L.popup({
-            maxWidth: 400,
-            minwidth: 200,
-            autoClose: false,
-            closeOnClick: false,
-          })
-        )
-        .setPopupContent(`${placeType}<br> ${visitation}`)
-        .openPopup();
-      markersGroup.addLayer(marker);
-
-      // initialMarker.remove();
-      html = `<div class="list--div" data-id="${Date.now()}">
-              <h2 class="place-type-value">
-              ${placeType}
-              </h2>
-              <h3 class="visit-value">${visitation} </h3>
-              </div>`;
-      userInputDiv.insertAdjacentHTML("afterend", html);
-      placesListDiv = document.querySelector(".list--div");
-      placesArr.push({
-        coords: [lat, lng],
-        uid: placesListDiv.dataset.id,
-        htmlPlaces: html,
-      });
-
-      return;
-    }
-  });
-});
+    });
+  },
+  // if location access is denied.
+  function () {
+    alert(
+      "☹️ Sorry, please allow location access for proper functionality of the site."
+    );
+    return;
+  }
+);
 
 window.addEventListener("click", function (e) {
   placesListDiv = document.querySelector(".list--div");
@@ -372,7 +385,7 @@ window.addEventListener("click", function (e) {
       markersGroup.addLayer(marker);
 
       map.panTo(desiredObj.coords);
-      map.setView(desiredObj.coords, 15);
+      map.setView(desiredObj.coords, 13);
     }
   }
   console.log(placesArr);
