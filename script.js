@@ -36,6 +36,7 @@ let longitude;
 let lat, lng;
 let initialMarker;
 let placesArr = [];
+let markersGroup;
 navigator.geolocation.getCurrentPosition(function (position) {
   latitude = position.coords.latitude;
   longitude = position.coords.longitude;
@@ -47,6 +48,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
     subdomains: ["mt0", "mt1", "mt2", "mt3"],
   }).addTo(map);
 
+  // create a marker group
+  markersGroup = L.layerGroup().addTo(map);
   // THE SEARCH BAR ON TOP-RIGHT
   const geocoderControl = L.Control.geocoder({
     collapsed: false,
@@ -81,7 +84,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
       console.log(visitTypeValue);
       console.log(document.querySelector(".place-type-value"));
       console.log(placeTypeValue);
-      L.marker(item.coords)
+      marker = L.marker(item.coords)
         .addTo(map)
         .bindPopup(
           L.popup({
@@ -97,6 +100,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
           }`
         )
         .openPopup();
+      markersGroup.addLayer(marker);
       placesArr.push(item); // add the loaded ones to the current array to work on.
       console.log(placesArr);
     });
@@ -132,7 +136,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
       if (!placeType) {
         return;
       }
-      L.marker([lat, lng])
+      marker = L.marker([lat, lng])
         .addTo(map)
         .bindPopup(
           L.popup({
@@ -144,6 +148,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
         )
         .setPopupContent(`${placeType}`)
         .openPopup();
+      markersGroup.addLayer(marker);
+
       initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
                       <h2 class="place-type-value">
@@ -165,7 +171,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
       const date = inputDateVisited.value;
       // when there is no date, no place type, just the visitation -> visited
       if (!date && !placeType) {
-        L.marker([lat, lng])
+        marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
             L.popup({
@@ -177,6 +183,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
           )
           .setPopupContent(`${visitation}`)
           .openPopup();
+        markersGroup.addLayer(marker);
+
         initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
                     <h3 class="visit-value">${visitation} </h3>
@@ -193,7 +201,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
       }
       //  when the place is visited but date is not entered. visitation -> visited
       if (!date) {
-        L.marker([lat, lng])
+        marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
             L.popup({
@@ -207,6 +215,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
             `${!placeType ? "" : placeType + "<br>"}  ${visitation}`
           )
           .openPopup();
+        markersGroup.addLayer(marker);
+
         initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">${placeType}
@@ -227,7 +237,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
       //  when the place is visited and date is entered.
       const prettyDate = monthsBreakdown(date); // get a neat readable date from the function.
       console.log(prettyDate, placeType, visitation);
-      L.marker([lat, lng])
+      marker = L.marker([lat, lng])
         .addTo(map)
         .bindPopup(
           L.popup({
@@ -239,6 +249,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
         )
         .setPopupContent(`${placeType} <br> ${visitation} on 🗓️ ${prettyDate}`)
         .openPopup();
+      markersGroup.addLayer(marker);
+
       initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">
@@ -255,10 +267,10 @@ navigator.geolocation.getCurrentPosition(function (position) {
       });
       return;
     }
-    if (visitation === "🤩 I Want To Visit") {
+    if (visitation === "🤩 I want to visit") {
       if (!placeType) {
         // when the place hasn't been visited -> visitation: want to visit.
-        L.marker([lat, lng])
+        marker = L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
             L.popup({
@@ -270,6 +282,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
           )
           .setPopupContent(`${visitation}`)
           .openPopup();
+        markersGroup.addLayer(marker);
+
         initialMarker.remove();
         html = ` <div class="list--div" data-id="${Date.now()}">
                  <h3 class="visit-value">${visitation} </h3>
@@ -285,7 +299,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
         return;
       }
       console.log(placeType, visitation);
-      L.marker([lat, lng])
+      marker = L.marker([lat, lng])
         .addTo(map)
         .bindPopup(
           L.popup({
@@ -297,6 +311,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
         )
         .setPopupContent(`${placeType}<br> ${visitation}`)
         .openPopup();
+      markersGroup.addLayer(marker);
+
       initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">
@@ -333,7 +349,8 @@ window.addEventListener("click", function (e) {
         }
       }
 
-      L.marker(desiredObj.coords).addTo(map);
+      marker = L.marker(desiredObj.coords).addTo(map);
+      markersGroup.addLayer(marker);
       map.panTo(desiredObj.coords);
       map.setView(desiredObj.coords, 13);
     } else {
@@ -343,7 +360,9 @@ window.addEventListener("click", function (e) {
           desiredObj = placesArr[i];
         }
       }
-      L.marker(desiredObj.coords).addTo(map);
+      marker = L.marker(desiredObj.coords).addTo(map);
+      markersGroup.addLayer(marker);
+
       map.panTo(desiredObj.coords);
       map.setView(desiredObj.coords, 13);
     }
@@ -357,27 +376,18 @@ window.addEventListener("click", function (e) {
     placesListDiv = document.querySelectorAll(".list--div");
     if (placesListDiv) placesListDiv.forEach((placeDiv) => placeDiv.remove());
     placesArr = [];
-    // L.marker.remove();
     inputPlaceType.value = "";
     inputVisitationType.value = "";
-    inputDateVisited.value = "";
-    removeAllMarkers();
+    if (inputDateVisited) inputDateVisited.value = "";
+    // remove every marker at once
+    markersGroup.clearLayers();
   }
 });
 
-function removeAllMarkers() {
-  map.eachLayer((layer) => {
-    if (layer instanceof L.Marker) {
-      map.removeLayer(layer);
-    }
-  });
-}
-//   ${
-//     inputType.value === "running"
-//       ? "Running on " + this.running[this.running.length - 1].date
-//       : "Cycling on " + this.cycling[this.cycling.length - 1].date
-//   }
-
-//   className: `${
-//     inputType.value === "running" ? "running-popup" : "cycling-popup"
-//   } `,
+// function removeAllMarkers() {
+//   map.eachLayer((layer) => {
+//     if (layer instanceof L.Marker) {
+//       map.removeLayer(layer);
+//     }
+//   });
+// }
