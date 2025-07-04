@@ -10,6 +10,8 @@ h1 {
   letter-spacing: 0.1rem;
   margin-top: 2.5rem;
   color: rgb(77, 1, 35);
+  color: brown;
+  font-size: 1rem;
 }
 .map--div {
   position: relative;
@@ -19,13 +21,13 @@ h1 {
   width: 100vw;
   overflow: hidden;
   z-index: 0;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 .info--div {
   /* background: rgba(255, 255, 255, 0.545); */
   background: rgba(0, 0, 0, 0.081);
   position: absolute;
-  font-size: 1rem;
+  font-size: 0.8rem;
   top: 0;
   left: 0;
   height: 100vh;
@@ -52,10 +54,10 @@ h1 {
   padding: 1rem;
   height: auto;
   width: 80%;
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr; */
   border-radius: 1rem;
   position: sticky;
   top: 0;
@@ -67,23 +69,32 @@ h1 {
 .place-visited,
 .place-type,
 .submit,
-.reset,
-.date {
-  font-size: 18px;
+.reset {
+  font-size: 0.8rem;
   height: auto;
-  width: auto;
+  width: 180px;
   padding: 1rem;
   padding-left: 0.8rem;
   border-radius: 0.5rem;
   margin: 1rem;
 }
-
+.date {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 75%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1rem;
+  font-size: 0.8rem;
+}
 .submit,
 .reset {
   border-radius: 1.8rem;
-  grid-column-start: 0;
-  grid-column-end: 1;
-  height: min-content;
+  /* grid-column-start: 0;
+  grid-column-end: 1; */
+  height: auto;
+  width: 40%;
   /* background-color: rgba(31, 93, 237, 0.531);
   background-color: rgba(3, 43, 74, 0.803); */
   /* background: linear-gradient(to left, rgba(3, 43, 74, 0.803), black); */
@@ -103,13 +114,13 @@ h1 {
   color: white;
   /* color: rgba(98, 1, 255, 0.71); */
   font-weight: 600;
-  border: 0.05rem solid black;
   /* font-size: 1.1rem; */
 }
 .reset {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  height: min-content;
+  /* grid-column-start: 1;
+  grid-column-end: 2; */
+  height: auto;
+  width: 40%;
   background: tomato;
 }
 .submit:hover {
@@ -125,6 +136,8 @@ h1 {
     rgba(0, 0, 0, 0.602)
   );
   background: rgba(9, 108, 183, 0.884);
+  background: rgba(24, 152, 251, 0.822);
+
   /* background-color: rgba(43, 15, 109, 0.628); */
   /* background-color: rgba(0, 0, 0, 0.644); */
   border: none;
@@ -181,6 +194,6 @@ h3 {
   height: 40px;
   line-height: 50px;
   padding: 0 8px;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   box-sizing: border-box;
 }
