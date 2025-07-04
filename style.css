@@ -211,6 +211,9 @@ h2 {
   .map--div {
     font-size: 16.1px;
   }
+  .info--div {
+    width:42vw;
+  }
   .place-visited,
   .place-type,
   .submit,
