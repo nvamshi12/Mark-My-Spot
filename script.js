@@ -24,7 +24,9 @@ function monthsBreakdown(date) {
 
 inputVisitationType.addEventListener("change", function () {
   if (inputVisitationType.value === "✅ Visited") {
-    inputPlaceType.insertAdjacentHTML("afterend", dateHTML);
+    inputDateVisited = document.querySelector(".date");
+    if (!inputDateVisited)
+      inputPlaceType.insertAdjacentHTML("afterend", dateHTML);
   } else {
     inputDateVisited = document.querySelector(".date");
     if (inputDateVisited) inputDateVisited.remove();
@@ -37,6 +39,7 @@ let lat, lng;
 let initialMarker;
 let placesArr = [];
 let markersGroup;
+let markerExists;
 navigator.geolocation.getCurrentPosition(function (position) {
   latitude = position.coords.latitude;
   longitude = position.coords.longitude;
@@ -75,9 +78,10 @@ navigator.geolocation.getCurrentPosition(function (position) {
     storedDataArr.forEach((item) => {
       console.log(item.htmlPlaces);
       userInputDiv.insertAdjacentHTML("afterend", item.htmlPlaces); // display the html
-
-      const placeTypeValue =
-        document.querySelector(".place-type-value").textContent;
+      let placeTypeValue = document.querySelector(".place-type-value");
+      if (placeTypeValue)
+        placeTypeValue =
+          document.querySelector(".place-type-value").textContent;
       let visitTypeValue = document.querySelector(".visit-value");
       if (visitTypeValue)
         visitTypeValue = document.querySelector(".visit-value").textContent;
@@ -112,6 +116,8 @@ navigator.geolocation.getCurrentPosition(function (position) {
     console.log("map is clicked!");
     lat = pos.latlng.lat;
     lng = pos.latlng.lng;
+    // check if marker already exists
+    markerExists = checkIfMarkerAlreadyExists(pos.latlng);
 
     if (initialMarker) initialMarker.remove();
     initialMarker = L.marker([lat, lng])
@@ -128,6 +134,9 @@ navigator.geolocation.getCurrentPosition(function (position) {
       .openPopup();
   });
   submitBtn.addEventListener("click", function (e) {
+    initialMarker.remove();
+    markerExists = checkIfMarkerAlreadyExists({ lat, lng });
+    if (markerExists) return;
     inputDateVisited = document.querySelector(".date");
     const placeType = inputPlaceType.value;
     const visitation = inputVisitationType.value;
@@ -150,7 +159,6 @@ navigator.geolocation.getCurrentPosition(function (position) {
         .openPopup();
       markersGroup.addLayer(marker);
 
-      initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
                       <h2 class="place-type-value">
                       ${placeType}
@@ -185,7 +193,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
           .openPopup();
         markersGroup.addLayer(marker);
 
-        initialMarker.remove();
+        // initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
                     <h3 class="visit-value">${visitation} </h3>
                 </div>`;
@@ -217,7 +225,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
           .openPopup();
         markersGroup.addLayer(marker);
 
-        initialMarker.remove();
+        // initialMarker.remove();
         html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">${placeType}
               </h2>
@@ -251,7 +259,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
         .openPopup();
       markersGroup.addLayer(marker);
 
-      initialMarker.remove();
+      // initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">
               ${placeType}
@@ -284,7 +292,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
           .openPopup();
         markersGroup.addLayer(marker);
 
-        initialMarker.remove();
+        // initialMarker.remove();
         html = ` <div class="list--div" data-id="${Date.now()}">
                  <h3 class="visit-value">${visitation} </h3>
                  </div>`;
@@ -313,7 +321,7 @@ navigator.geolocation.getCurrentPosition(function (position) {
         .openPopup();
       markersGroup.addLayer(marker);
 
-      initialMarker.remove();
+      // initialMarker.remove();
       html = `<div class="list--div" data-id="${Date.now()}">
               <h2 class="place-type-value">
               ${placeType}
@@ -364,7 +372,7 @@ window.addEventListener("click", function (e) {
       markersGroup.addLayer(marker);
 
       map.panTo(desiredObj.coords);
-      map.setView(desiredObj.coords, 13);
+      map.setView(desiredObj.coords, 15);
     }
   }
   console.log(placesArr);
@@ -391,3 +399,14 @@ window.addEventListener("click", function (e) {
 //     }
 //   });
 // }
+
+function checkIfMarkerAlreadyExists(latLng) {
+  const exists = markersGroup
+    .getLayers()
+    .some((marker) => marker.getLatLng().equals(latLng));
+
+  if (exists) {
+    console.log("Marker already here! 🎯");
+    return true;
+  } else return false;
+}
