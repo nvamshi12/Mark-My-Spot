@@ -214,12 +214,21 @@ h2 {
   .place-visited,
   .place-type,
   .submit,
-  .reset {
+  .reset, .date {
     width: calc(100% - 2rem);
-    font-size: 16.1px;
+    font-size: 17px;
   }
   .place-visited,
+  .place-type,.date{
+  height:2.2rem;
+  }
   .place-type{
-  height:2rem;
+    margin-top: 0;
+  }
+  h2{
+    font-size: 18px;
+  }
+  h3{
+    font-size: 16.1px;
   }
 }
