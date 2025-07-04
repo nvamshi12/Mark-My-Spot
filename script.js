@@ -89,6 +89,8 @@ navigator.geolocation.getCurrentPosition(
         console.log(visitTypeValue);
         console.log(document.querySelector(".place-type-value"));
         console.log(placeTypeValue);
+        userInputDiv.classList.remove("hidden");
+
         marker = L.marker(item.coords)
           .addTo(map)
           .bindPopup(
