@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""></script>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script
+      defer
+      src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <div class="map--div" id="map">
+      <!-- What's Happening -->
+    </div>
+    <div class="info--div">
+      <!-- <img src="./assets/logo-black.png" style="height:22%; width:40%;"> -->
+
+      <h1>MARK MY SPOT 📍🗺️</h1>
+      <div class="user-input--div hidden">
+        <select class="place-visited">
+          <option selected disabled value="">Visited this Place?</option>
+          <option value="✅ Visited">Visited ✅</option>
+          <option value="🤩 I Want To Visit">I Want To Visit 🤩</option>
+        </select>
+        <select class="place-type">
+          <option selected disabled value="">Type of Place?</option>
+          <option value="🏔️ View Point">View Point 🏔️</option>
+          <option value="🌅 Sunrise Spot">Sunrise Spot 🌅</option>
+          <option value="🌄 Sunset Spot">Sunset Spot 🌄</option>
+          <option value="☘️ Hike/Trail">Hike/Trail ☘️</option>
+          <option value="🏃 Running Spot">Running Spot 🏃</option>
+          <option value="🧘 Peaceful Spot">Peaceful Spot 🧘</option>
+          <option value="✨ Hidden Gem">Hidden Gem ✨</option>
+          <option value="🏠 Home">Home 🏠</option>
+          <option value="👨‍💼 Work">Work 👨‍💼</option>
+          <option value="🎉 Entertainment">Entertainment 🎉</option>
+          <option value="🏋️‍♂️ Gym">Gym 🏋️‍♂️</option>
+          <option value="🧘‍♂️ Yoga Studio">Yoga Studio 🧘‍♂️</option>
+          <option value="🛍️ Shopping">Shopping 🛍️</option>
+          <option value="🛒 Grocery">Grocery 🛒</option>
+          <option value="🥗 Restaurant">Restaurant 🥗</option>
+          <option value="🏨 Hotel">Hotel 🏨</option>
+          <option value="🛕 ⛪️ 🕌 Prayer">Prayer 🛕 ⛪️ 🕌</option>
+        </select>
+
+        <button class="submit">Mark It 📍</button>
+        <button class="reset">Reset ✋</button>
+      </div>
+    </div>
+  </body>
+</html>
