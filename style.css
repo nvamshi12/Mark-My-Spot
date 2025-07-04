@@ -223,7 +223,7 @@ h2 {
   height:2.2rem;
   }
   .date{
-  width: calc(80% - 0.5rem);
+  width: calc(80% - 0.25rem);
   }
   .place-type{
     margin-top: 0;
