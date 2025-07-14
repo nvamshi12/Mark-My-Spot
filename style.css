@@ -208,33 +208,32 @@ h2 {
 
 /* For Mobile screens */
 @media (max-width: 999px) {
-  .map--div {
-    font-size: 16.1px;
+  h1 {
+    font-size: 1.7rem;
   }
-  .info--div {
-    width:42vw;
+  .map--div {
+    font-size: 2rem;
   }
   .place-visited,
   .place-type,
   .submit,
-  .reset, .date {
+  .reset,
+  .date {
     width: calc(100% - 2rem);
-    font-size: 17px;
+    font-size: 16px;
+  }
+  .submit {
+    width: 100%;
   }
   .place-visited,
-  .place-type,.date{
-  height:2.2rem;
-  }
-  .date{
-  width: calc(80% - 0.25rem);
-  }
-  .place-type{
-    margin-top: 0;
-  }
-  h2{
+  .place-type {
+    height: auto;
     font-size: 18px;
   }
-  h3{
-    font-size: 16.1px;
+  h2 {
+    font-size: 1.4rem;
+  }
+  h3 {
+    font-size: 1.1rem;
   }
 }
