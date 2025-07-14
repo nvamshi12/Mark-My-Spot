@@ -223,6 +223,7 @@ h2 {
   }
   .date {
     font-size: 20px;
+    width: calc(100% - 1rem);
   }
   .place-visited,
   .place-type {
@@ -237,5 +238,6 @@ h2 {
   }
   h3 {
     font-size: 1.2rem;
+    text-align: center;
   }
 }
