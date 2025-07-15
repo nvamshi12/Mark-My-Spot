@@ -221,10 +221,14 @@ h2 {
   .reset {
     width: calc(100% - 2rem);
     font-size: 20px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   .date {
     font-size: 20px;
     width: calc(91% - 2rem);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
   .place-visited,
   .place-type {
