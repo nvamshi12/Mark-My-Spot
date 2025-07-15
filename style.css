@@ -224,7 +224,7 @@ h2 {
   }
   .date {
     font-size: 20px;
-    width: calc(100% - 2rem);
+    width: calc(91% - 2rem);
   }
   .place-visited,
   .place-type {
@@ -238,7 +238,7 @@ h2 {
     font-size: 1.5rem;
   }
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.2 rem;
     text-align: center;
   }
   .leaflet-popup-content {
