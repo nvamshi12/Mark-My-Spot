@@ -230,11 +230,6 @@ h2 {
     padding-top: 1rem;
     padding-bottom: 1rem;
   }
-  .place-visited,
-  .place-type {
-    height: auto;
-    font-size: 20px;
-  }
   .place-type {
     margin-top: 0.2rem;
   }
